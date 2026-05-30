@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { motion } from "motion/react";
+import { useState, useEffect } from "react";
 import {
   ArrowRight,
   Download,
@@ -11,6 +12,18 @@ import {
   Users,
   Sparkles,
 } from "lucide-react";
+
+function useIsLargeScreen() {
+  const [isLarge, setIsLarge] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 1024px)");
+    setIsLarge(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsLarge(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+  return isLarge;
+}
 
 const fadeUp = {
   initial: { opacity: 0, y: 40 },
@@ -189,6 +202,8 @@ const RESEARCH_TOPICS = [
 ];
 
 export function Home() {
+  const isLarge = useIsLargeScreen();
+
   return (
     <div style={{ backgroundColor: "#0A0A0A", color: "#FFFFFF" }}>
       {/* ─── HERO ─── */}
@@ -219,11 +234,10 @@ export function Home() {
             margin: "0 auto",
             width: "100%",
             display: "grid",
-            gridTemplateColumns: "1fr",
+            gridTemplateColumns: isLarge ? "1fr auto" : "1fr",
             gap: "4rem",
             alignItems: "center",
           }}
-          className="lg:grid-cols-[1fr_auto]"
         >
           <div style={{ maxWidth: 760 }}>
             <motion.p
@@ -366,14 +380,15 @@ export function Home() {
             </motion.div>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, delay: 0.3 }}
-            className="hidden lg:block"
-          >
-            <AbstractGrid />
-          </motion.div>
+          {isLarge && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.9, delay: 0.3 }}
+            >
+              <AbstractGrid />
+            </motion.div>
+          )}
         </div>
       </section>
 
