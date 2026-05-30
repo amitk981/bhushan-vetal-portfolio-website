@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import { motion } from "motion/react";
-import { useState, useEffect } from "react";
 import {
   ArrowRight,
   Download,
@@ -13,17 +12,6 @@ import {
   Sparkles,
 } from "lucide-react";
 
-function useIsLargeScreen() {
-  const [isLarge, setIsLarge] = useState(false);
-  useEffect(() => {
-    const mql = window.matchMedia("(min-width: 1024px)");
-    setIsLarge(mql.matches);
-    const handler = (e: MediaQueryListEvent) => setIsLarge(e.matches);
-    mql.addEventListener("change", handler);
-    return () => mql.removeEventListener("change", handler);
-  }, []);
-  return isLarge;
-}
 
 const fadeUp = {
   initial: { opacity: 0, y: 40 },
@@ -64,46 +52,6 @@ function SectionLabel({ number, label }: { number: string; label: string }) {
       >
         {label}
       </span>
-    </div>
-  );
-}
-
-function AbstractGrid() {
-  return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
-        gap: "0.75rem",
-        width: "100%",
-        maxWidth: 500,
-      }}
-    >
-      {[
-        { col: "span 2", aspect: "2/1", bg: "#111111", border: "1px solid #F97316" },
-        { col: "1", aspect: "1/1", bg: "#F97316" },
-        { col: "1", aspect: "1/1", bg: "#111111", border: "1px solid #262626" },
-        { col: "span 2", aspect: "2/1", bg: "#111111", border: "1px solid #262626" },
-        { col: "span 3", aspect: "6/1", bg: "#111111", border: "1px solid #262626" },
-        { col: "1", aspect: "1/1", bg: "#F97316", opacity: "0.2" },
-        { col: "1", aspect: "1/1", bg: "#111111", border: "1px solid #F97316" },
-        { col: "1", aspect: "1/1", bg: "#111111", border: "1px solid #262626" },
-      ].map((tile, i) => (
-        <motion.div
-          key={i}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4 + i * 0.08, duration: 0.5 }}
-          style={{
-            gridColumn: tile.col,
-            aspectRatio: tile.aspect,
-            backgroundColor: tile.bg,
-            border: tile.border || "none",
-            opacity: tile.opacity ? Number(tile.opacity) : 1,
-            borderRadius: "0.125rem",
-          }}
-        />
-      ))}
     </div>
   );
 }
@@ -202,8 +150,6 @@ const RESEARCH_TOPICS = [
 ];
 
 export function Home() {
-  const isLarge = useIsLargeScreen();
-
   return (
     <div style={{ backgroundColor: "#0A0A0A", color: "#FFFFFF" }}>
       {/* ─── HERO ─── */}
@@ -234,7 +180,7 @@ export function Home() {
             margin: "0 auto",
             width: "100%",
             display: "grid",
-            gridTemplateColumns: isLarge ? "1fr auto" : "1fr",
+            gridTemplateColumns: "1fr",
             gap: "4rem",
             alignItems: "center",
           }}
@@ -380,15 +326,6 @@ export function Home() {
             </motion.div>
           </div>
 
-          {isLarge && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.9, delay: 0.3 }}
-            >
-              <AbstractGrid />
-            </motion.div>
-          )}
         </div>
       </section>
 
